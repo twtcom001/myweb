@@ -1,1 +1,1 @@
-1.创建框架  requirements 使用mini_blog 有空再优化吧
+1.鍒涘缓妗嗘灦  requirements 浣跨敤mini_blog 鏈夌┖鍐嶄紭鍖栧惂
