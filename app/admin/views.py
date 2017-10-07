@@ -7,7 +7,8 @@ from flask_login import login_required, current_user
 from . import admin
 from .. import db
 
-@login_required
+
 @admin.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
     return render_template('admin/index.html')
