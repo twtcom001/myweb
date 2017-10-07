@@ -23,3 +23,18 @@ class Config():
     @staticmethod
     def init_app(app):
         pass
+
+class ProdConfig(Config):
+    """Production config class."""
+    pass
+
+class DevConfig(Config):
+    """Development config class."""
+    # Open the DEBUG
+    DEBUG = True
+
+config = {
+'development': DevConfig,
+'production': ProdConfig,
+'default': DevConfig
+}
