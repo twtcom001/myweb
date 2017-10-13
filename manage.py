@@ -25,8 +25,11 @@ manager.add_command("shell", Shell(make_context=make_shell_context))
 # 初始化数据
 @manager.command
 def deploy():
-	from app.models import User
-	User.insert_admin(email='106640085@qq.com', username='xuhonglin', password='xuhonglin')
+	from app.models import User, Role
+	# 初始化权限
+	Role.insert_roles()
+	#初始化管理员账号
+	User.insert_admin(email='106640085@qq.com', username='xuhonglin', password='xuhonglin', role_id=1)
 
 
 if __name__ == '__main__':
