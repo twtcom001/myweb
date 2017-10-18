@@ -11,13 +11,19 @@ class LoginForm(Form):
 
 class UsereditForm(Form):
     """ 用户信息表单 """
-    nickname = StringField(label='电子邮件', validators=[DataRequired(), Length(1, 64), Email()],
-        description="请输入电子邮件",
-        render_kw={ "class": "form-control"})
-    is_valid = SelectField(label='状态', validators=[DataRequired()],
-        render_kw={ "class": "form-control"})
-    password = PasswordField(label='密码', validators=[Optional()],
-        description="请输入密码",
-        render_kw={"class": "form-control"})
-    submit = SubmitField('保存信息', render_kw={
-            'class': 'btn btn-info'})
+    username = StringField(label='用户名', validators=[DataRequired()])
+    password = PasswordField(label='密码', validators=[Optional()])
+    submit = SubmitField('保存信息')
+
+class UseraddForm(Form):
+    """ 用户注册 """
+    email = StringField(label="个人邮箱", validators=[DataRequired()],
+        render_kw={"required": 'required', "placeholder": "请输入个人邮箱", "class": "form-control"},
+        description="输入用用户邮箱注册")
+
+    username = StringField(label="用户名", validators=[DataRequired()],
+        render_kw={"required": 'required', "placeholder": "请输入用户名", "class": "form-control"},
+        description="输入用户昵称")
+    password = PasswordField('密码', validators=[DataRequired("请输入密码")], 
+        render_kw={"required": 'required', "class": "form-control"}
+        )
