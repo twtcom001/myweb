@@ -2,6 +2,7 @@
  {% import 'module/paginator.html' as paginator %}
 {% block head %}
 <title>主页</title>
+
 {% endblock %}
 
 {% block content %}
@@ -123,8 +124,7 @@
                     {{ form.password }}
                 </div>
   <div class="form-group">
-                    {{ form.csrf_token }}
-  <button type="button" class="btn btn-default" id='newbtn'>新增用户</button>
+  <button type="button" class="btn btn-xs" id='newbtn'>新增用户</button>
 
   </div>
 </form>
@@ -142,25 +142,24 @@
                 </div>
                   <div class="form-group">
     <input type="hidden" name="uid" > 
-  </div> 
+                </div> 
                 <div class="form-group">
-                    {{ form1.csrf_token }}
-                     <button type="button" class="btn btn-default" id='btnsave'>保存</button>
+                     <button type="button" class="btn btn-xs" id='btnsave'>保存</button>
                 </div>
 </form>
 </div>
 <div id="addinfo" style="clear:both;" >
   
 </div>
-<table class="table">
+<table class="table table-bordered table-hover ">
         <thead>
           <tr>
             <th>id</th>
+            <th>邮箱</th>
             <th>用户名</th>
-            <th>昵称</th>
             <th>用户状态</th>
             <th>最后登陆</th>
-            <th>操作  <button class="btn btn-default btn1">新增</button></th>
+            <th><button class="btn btn-xs btn1"><span class="glyphicon glyphicon-user"></span>新增</button></th>
           </tr>
         </thead>
         <tbody>
@@ -172,22 +171,35 @@
       <td>{% if user_obj.is_valid %}Enable{% else %}Disable{% endif %}</td>
       <td>{{ user_obj.last_login|default('', true) }}</td>
       <td>
-       <button id="{{user_obj.id}}" class="btn btn-default btne">编辑用户</button>
-        <!--
-        <a href="{{ url_for('admin.useredit',uid=user_obj.id) }}" title="">编辑用户</a>
-        -->
+       <button id="{{user_obj.id}}" class="btn btn-xs btn-info btne"><i class="ace-icon fa fa-pencil bigger-120"></i></button>
+       <button id="{{user_obj.id}}del" class="btn btn-xs btn-danger btndel"><i class="ace-icon fa fa-trash-o bigger-120"></i></button>
+
       </td>
     </tr>
     {% endfor %}
         </tbody>
       </table>
-
+          <!-- 分页 -->
+{{ paginator.pagination(page_data, 'admin.user') }}
+<!-- // 分页 -->
 					</div><!-- /.page-content -->
+
 				</div>
 			</div><!-- /.main-content -->
 
 <script src="{{ url_for('static', filename='assets/js/jquery-2.1.4.min.js') }}"></script>
 <script >
+  var csrftoken = $('meta[name=csrf-token]').attr('content')
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken)
+        }
+    }
+})
+
+
   $("#newbtn").click(function(e){
     e.stopPropagation();
     data = $('#formid').serialize();
@@ -198,24 +210,13 @@
     $.post("/admin/useradd",data,function(data){
       $("#addinfo").show();
       $("#addinfo").html(data.message);
+      location.reload();
     },'json');
 
-    //jquery ajax提交数据。
-    // $.ajax({
-    // type: 'POST',
-    // url: '/admin/useraddajax',
-    // data: data, // 最终会被转化为查询字符串跟在url后面： 
-    // dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
-    // success: function(data) { // 这里的data就是json格式的数据
-    //   $("#addinfo").show();
-    //   $("#addinfo").html(data.message);
-    // },
-    // error: function(xhr, type) {
-    // }
-    // });
   });
-
-  $("input").focusout(function() {
+  // jquery  mousedown 
+  //$("input").focusout(function() {
+  $("input").mousedown(function() {
     value = $(this).val();
     id = $(this).attr('id');
     data = {};
@@ -229,6 +230,7 @@
     success: function(data) { // 这里的data就是json格式的数据
       // alert(data.message)
       // $("#addinfo").show();
+      
       $("#addinfo").html(data.message)
       //$('.form-group input[type="text"]').val()
     },
@@ -251,19 +253,7 @@
       // $('#useredit input[type="text"]').val()=data.username;
       // 赋予值id为useredit里面的input(筛选条件 type="text" )的value 为data.username
       $('#useredit input[type="text"]').val(data.username);
-      // 
-      // $('.perms option[value='+data.perms+']').attr("selected","selected");
-      //if (data.perms == "USER"){
-      //  $('.perms')[0].selectedIndex = 1;
-      //}else{
-      //  $('.perms')[0].selectedIndex = 0;
-      //}
-      // $('.is_valid option[value='+data.is_valid+']').attr("selected","selected");
-      //if (data.is_valid == "Enable"){
-      //  $('.status')[0].selectedIndex = 0;
-      //}else{
-      //  $('.status')[0].selectedIndex = 1;
-      //}
+
       $('#useredit input[type="hidden"]').val(data.uid);
 
       
@@ -301,7 +291,5 @@
   });
 </script>
 
-<!-- 分页 -->
-{{ paginator.pagination(page_data, 'userlist') }}
-<!-- // 分页 -->
+
 {% endblock %}
