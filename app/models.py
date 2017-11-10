@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     avatar_hash = db.Column(db.String(32))
     head_img = db.Column(db.String(200))
     is_valid = db.Column(db.Boolean, default=True)
+    last_login = db.Column(db.DateTime, doc="最后登录时间")
     
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
@@ -51,7 +52,8 @@ class User(UserMixin, db.Model):
             self.email.encode('utf-8')).hexdigest()
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
             url=url, hash=hash, size=size, default=default, rating=rating)
-    def can(slef, permissions):
+ 
+    def can(self, permissions):
         return self.role is not None and \
             (self.role.permissions & permissions) == permissions
 
@@ -97,6 +99,16 @@ class Role(db.Model):
                 role.default = roles[r][1]
                 db.session.add(role)
             db.session.commit()
+
+class Logs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(64))
+    level = db.Column(db.Integer)
+    op_time = db.Column(db.DateTime, doc="最后登录时间")
+    comment = db.Column(db.String(255)) 
+
+        
+
 
 
 

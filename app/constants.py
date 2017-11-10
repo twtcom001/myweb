@@ -3,6 +3,7 @@
 
 import re
 
+
 # 邮箱正则
 EMAIL_PATTERN = re.compile(
     r'(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)', re.IGNORECASE)

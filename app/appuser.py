@@ -65,7 +65,7 @@ class AppUser(object):
 
 
 
-    def add_user(self,email,username,password):
+    def useradd(self,email,username,password):
         if self.validate:
             user = User(
             email=email,
@@ -78,4 +78,13 @@ class AppUser(object):
             return "新增用户成功"         
         else:
             return "新增用户失败"
+
+    def userdel(self,uid):
+        if ( uid == 1 ):
+            return "管理员禁止删除!"
+        else:
+            user = User.query.filter_by(id=uid).first()
+            db.session.delete(user)
+            db.session.commit()
+            return "删除用户成功!"
 

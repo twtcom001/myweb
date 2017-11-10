@@ -12,13 +12,12 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="ace-icon fa fa-home home-icon"></i>
-								<a href="#">Home</a>
+								<a href="/admin">Home</a>
 							</li>
 
 							<li>
-								<a href="#">Tables</a>
+								<a href="/admin/user">用户管理</a>
 							</li>
-							<li class="active">Simple &amp; Dynamic</li>
 						</ul><!-- /.breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
@@ -101,10 +100,10 @@
 
 						<div class="page-header">
 							<h1>
-								Tables
+								管理后台
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
-									Static &amp; Dynamic Tables
+									用户管理
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -172,7 +171,7 @@
       <td>{{ user_obj.last_login|default('', true) }}</td>
       <td>
        <button id="{{user_obj.id}}" class="btn btn-xs btn-info btne"><i class="ace-icon fa fa-pencil bigger-120"></i></button>
-       <button id="{{user_obj.id}}del" class="btn btn-xs btn-danger btndel"><i class="ace-icon fa fa-trash-o bigger-120"></i></button>
+       <button id="{{user_obj.id}}" class="btn btn-xs btn-danger btndel"><i class="ace-icon fa fa-trash-o bigger-120"></i></button>
 
       </td>
     </tr>
@@ -186,8 +185,9 @@
 
 				</div>
 			</div><!-- /.main-content -->
+<script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/bootbox.js') }}"></script>
 
-<script src="{{ url_for('static', filename='assets/js/jquery-2.1.4.min.js') }}"></script>
 <script >
   var csrftoken = $('meta[name=csrf-token]').attr('content')
 
@@ -289,6 +289,37 @@ $.ajaxSetup({
       $("#dhide").show();
       // $("#addinfo").hide();
   });
+
+  $(".btndel").on('click',function(){
+    uid = $(this).attr('id');
+    bootbox.confirm({
+      size: "small",
+      message: "确认删除！", 
+      callback: function(result){ /* result is a boolean; true = OK, false = Cancel*/
+            if (result === true) {
+              
+              data = uid;
+              $.ajax({
+                type: 'POST',
+                url: '/admin/userdel/'+uid+'/',
+                data: data, // 最终会被转化为查询字符串跟在url后面： 
+                dataType: 'json', // 注意：这里是指希望服务端返回json格式的数据
+                success: function(data) { // 这里的data就是json格式的数据
+                window.location.href="/admin/user";
+                },
+                error: function(xhr, type) {
+                }
+              });
+
+            } else {
+              // result has a value
+            }
+      }
+    })
+  });
+
+
+  
 </script>
 
 

@@ -8,10 +8,11 @@ from flask import jsonify
 
 from . import admin
 from .. import db
-from ..decorators import admin_required, permission_required 
-from ..models import Permission, User
+from ..decorators import admin_required, permission_required
+from ..models import Permission, User, Logs
 from .forms import UsereditForm, UseraddForm
 from ..appuser import AppUser
+from ..app import insert_log
 
 
 
@@ -20,11 +21,23 @@ from ..appuser import AppUser
 def index():
     return render_template('admin/index.html')
 
+@admin.route('/log', methods=['GET', 'POST'])
+@admin.route('/log/page/<int:page>/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def log(page=None):
+
+    if page is None:
+        page = 1
+    page_data = Logs.query.filter(id>0).paginate(
+        page=page, per_page=50)
+
+    return render_template('admin/log.html', page_data=page_data)
 
 @admin.route('/user', methods=['GET', 'POST'])
 @admin.route('/user/page/<int:page>/', methods=['GET', 'POST'])
 @login_required
-#@admin_required
+@admin_required
 def user(page=None):
     editform = UsereditForm()
     addform = UseraddForm()
@@ -39,7 +52,7 @@ def user(page=None):
 
 @admin.route('/useradd', methods=['GET', 'POST'])
 @login_required
-#@staff_perms_required
+@admin_required
 def useradd():
     message = ''
     appuser=AppUser()
@@ -54,13 +67,15 @@ def useradd():
     if password is not '' :
         message = appuser.validate_password(password)
     if username and email and password:
-        message = appuser.add_user(email,username,password)
+        message = appuser.useradd(email,username,password)
+        insert_log(current_user.email,1,unicode(message) )
     data={'message':message}
     return jsonify(data)
 
 @admin.route('/userinfo/', methods=['GET', 'POST'])
 @admin.route('/userinfo/<int:uid>/', methods=['GET', 'POST'])
-#@staff_perms_required
+@login_required
+@admin_required
 def userinfo(uid=None):
     if uid is None:
         message = '';
@@ -71,7 +86,8 @@ def userinfo(uid=None):
 
 @admin.route('/useredit/', methods=['GET', 'POST'])
 @admin.route('/useredit/<int:uid>/', methods=['GET', 'POST'])
-#@staff_perms_required
+@login_required
+@admin_required
 def useredit(uid=None):
     if uid is None:
         message = '';
@@ -85,6 +101,19 @@ def useredit(uid=None):
     data={'message':message}
     return jsonify(data)
 
+@admin.route('/userdel/', methods=['GET', 'POST'])
+@admin.route('/userdel/<int:uid>/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def userdel(uid=None):
+    if uid is None:
+        message = '';
+    else :
+        appuser=AppUser()
+        message=appuser.userdel(uid)
+        insert_log(current_user.email,1,unicode(message) )
+    data={'message':message}
+    return jsonify(data)
 
 
 

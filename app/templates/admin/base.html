@@ -31,6 +31,7 @@
 		<![endif]-->
 
 		<!-- inline styles related to this page -->
+		<script src="{{ url_for('static', filename='assets/js/jquery-2.1.4.min.js') }}"></script>
 
 		<!-- ace settings handler -->
 		<script src="{{ url_for('static', filename='assets/js/ace-extra.min.js') }}"></script>
@@ -159,7 +160,8 @@
 
 						<b class="arrow"></b>
 					</li>
-										<li class="">
+        {% if current_user.is_administrator() %}
+					<li class="">
 						<a href="." class="dropdown-toggle">
 							<i class="menu-icon fa fa-tag"></i>
 							<span class="menu-text"> 管理后台 </span>
@@ -179,17 +181,17 @@
 								<b class="arrow"></b>
 							</li>
 							<li class="">
-								<a href="role">
+								<a href="log">
 									<i class="menu-icon fa fa-caret-right"></i>
-									角色管理
+									日志
 								</a>
 
 								<b class="arrow"></b>
 							</li>
 
-
 						</ul>
 					</li>
+		{% endif %}
 				</ul><!-- /.nav-list -->
 
 
