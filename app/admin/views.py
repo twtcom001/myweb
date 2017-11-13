@@ -1,19 +1,18 @@
 # coding:utf-8
-import sys
+import sys, os
 reload(sys)
 sys.setdefaultencoding('utf-8')
+from flask.ext.uploads import UploadSet, DOCUMENTS
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, current_user
 from flask import jsonify
 
 from . import admin
-from .. import db
+from .. import db, upfile
 from ..decorators import admin_required, permission_required
 from ..models import Permission, User, Logs
-from .forms import UsereditForm, UseraddForm
-from ..appuser import AppUser
-from ..app import insert_log
-
+from .forms import UsereditForm, UseraddForm, UploadForm
+from ..appclass import AppUser, insert_log
 
 
 @admin.route('/', methods=['GET', 'POST'])
@@ -115,6 +114,25 @@ def userdel(uid=None):
     data={'message':message}
     return jsonify(data)
 
+
+@admin.route('/plants/', methods=['POST', 'GET'])
+def plants():
+    form = UploadForm()
+    if request.method == 'POST' and 'file' in request.files:
+        filename = upfile.save(request.files['file'])
+        return redirect(url_for('admin.index'))
+
+    return render_template('admin/plants.html', form=form)
+'''
+    if request.method == 'POST':
+        f = request.files['file']
+        basepath = os.path.dirname(__file__)  # 当前文件所在路径
+        upload_path = os.path.join(basepath, 'static',f.filename)  #注意：没有的文件夹一定要先创建，不然会提示没有该路径
+        f.save(upload_path)
+        return redirect(url_for('admin.plants'))
+    form = UploadForm()
+    return render_template('admin/plants.html', form=form)
+'''
 
 
 

@@ -5,11 +5,13 @@ import re
 from datetime import datetime
 from flask import render_template, redirect, flash, url_for, request, abort
 from flask import jsonify
-
-#from app import app, login_manager, db
-from models import User
+from models import User, Logs
 from . import db, constants
-#from app.constants import PermsEnum, ValidEnum
+
+def insert_log(email,level,comment):
+        logs = Logs(email=email, level=level, op_time=datetime.now(), comment=comment)
+        db.session.add(logs)
+        db.session.commit()
 
 class AppUser(object):
     validate=True

@@ -1,3 +1,4 @@
+#coding: utf-8
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bootstrap import Bootstrap
@@ -5,7 +6,7 @@ from flask.ext.login import LoginManager
 from flask_wtf.csrf import CsrfProtect
 from flask_moment import Moment
 from config import config
-
+from flask.ext.uploads import UploadSet
 
 db = SQLAlchemy()
 bootstrap = Bootstrap()
@@ -14,6 +15,9 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
+
+# flask.ext.uploads  模块设置
+upfile = UploadSet('FILE')      #名字最好取大写，因为config里面都是要求大写，这样容易匹配 
 
 def create_app(config_name):
     app = Flask(__name__)

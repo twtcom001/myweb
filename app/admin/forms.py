@@ -1,7 +1,8 @@
 
 # coding: utf-8
 from flask_wtf import Form
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, BooleanField
+from flask.ext.uploads import UploadSet, DOCUMENTS
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField, BooleanField, FileField
 from wtforms.validators import DataRequired, Length, Email, ValidationError, Optional
 
 
@@ -27,3 +28,10 @@ class UseraddForm(Form):
     password = PasswordField('密码', validators=[DataRequired("请输入密码")], 
         render_kw={"required": 'required', "class": "form-control"}
         )
+
+excels = UploadSet('excel', DOCUMENTS)
+class UploadForm(Form):
+    file  = FileField(u'File')
+    submit = SubmitField('上传')
+
+

@@ -1,0 +1,16 @@
+{% extends 'admin/base.html' %}
+ {% import 'module/paginator.html' as paginator %}
+{% block head %}
+<title>主页</title>
+
+{% endblock %}
+
+{% block content %}
+    <form action="" enctype='multipart/form-data' method='POST'>
+        {{ form.csrf_token }}
+                  <div class="form-group">
+                    {{ form.file }} {{ form.submit }}</div>
+    </form>
+
+    
+{% endblock %}

@@ -1,6 +1,6 @@
 #coding: utf-8
 import hashlib
-from datetime import datetime
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
@@ -106,6 +106,24 @@ class Logs(db.Model):
     level = db.Column(db.Integer)
     op_time = db.Column(db.DateTime, doc="最后登录时间")
     comment = db.Column(db.String(255)) 
+
+
+
+class Plants(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    local_id = db.Column(db.String(64))
+    familia = db.Column(db.String(64), default='cactus')
+    genus = db.Column(db.String(40))
+    genus_id = db.Column(db.String(40))
+    icbn_name = db.Column(db.String(255))
+    chinese_name = db.Column(db.String(100))
+    introduce_id = db.Column(db.String(40))
+    introduce_from = db.Column(db.String(100))
+    introduce_price = db.Column(db.Integer, doc="引进价格")
+    introduce_date = db.Column(db.DateTime, doc="引进时间")
+    info_url = db.Column(db.String(255), doc="参考链接")
+    comment = db.Column(db.String(255), doc="备注")
+
 
         
 
