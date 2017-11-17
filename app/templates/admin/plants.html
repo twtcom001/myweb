@@ -1,16 +1,258 @@
 {% extends 'admin/base.html' %}
- {% import 'module/paginator.html' as paginator %}
+{% import 'module/paginator.html' as paginator %}
 {% block head %}
 <title>主页</title>
 
 {% endblock %}
 
 {% block content %}
-    <form action="" enctype='multipart/form-data' method='POST'>
-        {{ form.csrf_token }}
-                  <div class="form-group">
-                    {{ form.file }} {{ form.submit }}</div>
-    </form>
+<div class="main-content">
+	<div class="main-content-inner">
+		<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<div class="nav-search" id="nav-search">
+				<form class="form-search">
+					<span class="input-icon">
+						<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+						<i class="ace-icon fa fa-search nav-search-icon"></i>
+					</span>
+				</form>
+			</div><!-- /.nav-search -->
 
+		</div><!-- /.ace-settings-container -->
+	</div>
+    <form action="" enctype='multipart/form-data' class="navbar-form navbar-left"  method='POST'>
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.file }}
+        </div>
+        <div class="form-group">
+            {{ form.submit }}
+        </div>
+    </form>
+    <div class="col-xs-12">
+		<table id="simple-table" class="table  table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>本地编号</th>
+					<th>科目</th>
+					<th>属</th>
+					<th>拉丁名</th>
+					<th>中文名</th>
+					<th>属编号</th>
+					<th> </th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for plants_obj in page_data.items %}
+				<tr>
+					<td>{{ plants_obj.local_id }}</td>
+					<td>{{ plants_obj.familia }}</td>
+					<td>{{ plants_obj.genus }}</td>
+					<td>{{ plants_obj.icbn_name }}</td>
+					<td>{{ plants_obj.chinese_name }}</td>
+					<td>{{ plants_obj.genus_id }}</td>
+					<td class="center">
+						<div class="action-buttons">
+							<a href="#" class="green bigger-140 show-details-btn" title="Show Details">
+								<i class="ace-icon fa fa-angle-double-up"></i>
+								<span class="sr-only">Details</span>
+							</a>
+						</div>
+					</td>
+
+				</tr>
+				<tr class="detail-row">
+					<td colspan="8">
+						<div class="table-detail">
+							<div class="row">
+
+								<div class="col-xs-12 col-sm-7">
+									<div class="space visible-xs"></div>
+
+									<div class="profile-user-info profile-user-info-striped">
+										<div class="profile-info-row">
+											<div class="profile-info-name"> 拉丁名 </div>
+
+											<div class="profile-info-value">
+												<span >{% if plants_obj.icbn_name == '' %} None {% else %}{{ plants_obj.icbn_name }} {% endif %}</span>
+											</div>
+										</div>
+
+										<div class="profile-info-row">
+											<div class="profile-info-name"> 中文名 </div>
+
+											<div class="profile-info-value">
+												<span >{% if plants_obj.chinese_name == '' %} None {% else %}{{ plants_obj.chinese_name }} {% endif %}</span>
+											</div>
+										</div>
+
+										<div class="profile-info-row">
+											<div class="profile-info-name"> 科目 </div>
+
+											<div class="profile-info-value">
+												<span >{% if plants_obj.familia == '' %} None {% else %}{{ plants_obj.familia }} {% endif %}</span>
+											</div>
+										</div>
+
+										<div class="profile-info-row">
+											<div class="profile-info-name"> 属 </div>
+
+											<div class="profile-info-value">
+												<span  >{% if plants_obj.genus == '' %} None {% else %}{{ plants_obj.genus }} {% endif %}</span>
+											</div>
+										</div>
+
+										<div class="profile-info-row">
+											<div class="profile-info-name"> 参考链接 </div>
+
+											<div class="profile-info-value">
+												<span >{% if plants_obj.info_url == '' %} None {% else %}{{ plants_obj.info_url }} {% endif %}</span>
+											</div>
+										</div>
+
+										<div class="profile-info-row">
+											<div class="profile-info-name"> 备注 </div>
+
+											<div class="profile-info-value">
+												<span  > {% if plants_obj.comment == '' %} None {% else %}{{ plants_obj.comment }} {% endif %} </span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-xs-12 col-sm-3">
+									<div class="space visible-xs"></div>
+									<h4 class="header blue lighter less-margin">Send a message to Alex</h4>
+
+									<div class="space-6"></div>
+
+									<form>
+										<fieldset>
+											<textarea class="width-100" resize="none" placeholder="Type something…"></textarea>
+										</fieldset>
+
+										<div class="hr hr-dotted"></div>
+
+										<div class="clearfix">
+											<label class="pull-left">
+												<input type="checkbox" class="ace" />
+												<span class="lbl"> Email me a copy</span>
+											</label>
+
+											<button class="pull-right btn btn-sm btn-primary btn-white btn-round" type="button">
+												Submit
+												<i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		<!-- 分页 -->
+{{ paginator.pagination(page_data, 'admin.plants') }}
+<!-- // 分页 -->
+		</div>
+
+</div><!-- /.main-content -->
+
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+<script src="{{ url_for('static', filename='assets/js/jquery-2.1.4.min.js') }}"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+	if('ontouchstart' in document.documentElement) document.write("<script src='static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+
+<script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+
+<!-- page specific plugin scripts -->
+<script src="{{ url_for('static', filename='assets/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/jquery.dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/buttons.flash.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/buttons.html5.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/buttons.print.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/dataTables.select.min.js') }}"></script>
+
+<!-- ace scripts -->
+<script src="{{ url_for('static', filename='assets/js/ace-elements.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/ace.min.js') }}"></script>
+
+<!-- inline scripts related to this page -->
+
+<script type="text/javascript">
+	/*
+	function ShowElement(element) {
+        var oldhtml = element.innerHTML;
+        //创建新的input元素
+        var newobj = document.createElement('input');
+        //为新增元素添加类型
+        newobj.type = 'text';
+        //为新增元素添加value值
+        newobj.value = oldhtml;
+        //为新增元素添加光标离开事件
+        newobj.onblur = function() {
+            //当触发时判断新增元素值是否为空，为空则不修改，并返回原有值 
+            element.innerHTML = this.value == oldhtml ? oldhtml : this.value;
+            //当触发时设置父节点的双击事件为ShowElement
+            element.setAttribute("ondblclick", "ShowElement(this);");
+        }
+        //设置该标签的子节点为空
+        element.innerHTML = '';
+        //添加该标签的子节点，input对象
+        element.appendChild(newobj);
+        //设置选择文本的内容或设置光标位置（两个参数：start,end；start为开始位置，end为结束位置；如果开始位置和结束位置相同则就是光标位置）
+        newobj.setSelectionRange(0, oldhtml.length);
+        //设置获得光标
+        newobj.focus();
+
+        //设置父节点的双击事件为空
+        newobj.parentNode.setAttribute("ondblclick", "");
+    }
+    */
+	jQuery(function($) {
+		/***************/
+		$('.show-details-btn').on('click', function(e) {
+			e.preventDefault();
+			$(this).closest('tr').next().toggleClass('open');
+			$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+		});
+		/***************/
+		$("div.profile-info-value>span").dblclick(function(){
+	        var inval = $(this).html();                            //获得td里的html内容
+	        var infd = $(this).attr("fd");                        //获得td的fd属性的值
+	        var inid = $(this).parent().attr("id");                //获得td的父节点id属性的值
+	        
+	    //把td里的html内容变为input框，并赋值
+	        $(this).html("<input type='text' id='edit"+infd+inid+"' value='"+inval+"'>");
+	        
+	    //input框获得焦点，以及失去焦点后的处理    
+	        $("#edit"+infd+inid).focus("blur",function() {
+	            var editval = $(this).val();                //获得input框中的值
+
+	            $(this).parent().html(editval);                //把得到的值赋给input框父节点的html
+	            
+	        //post表单提交
+	        //    $.post("jquery_dblclick.php",{id:inid,fd:infd,val:editval},function(data) {
+	         //       alert(data);
+	         //   })
+	        })
+	    })
+	})
+</script>
     
 {% endblock %}

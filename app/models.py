@@ -1,9 +1,9 @@
 #coding: utf-8
 import hashlib
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
+
 
 
 class User(UserMixin, db.Model):
@@ -111,24 +111,21 @@ class Logs(db.Model):
 
 class Plants(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    local_id = db.Column(db.String(64))
+    local_id = db.Column(db.String(64), unique=True)
     familia = db.Column(db.String(64), default='cactus')
     genus = db.Column(db.String(40))
     genus_id = db.Column(db.String(40))
     icbn_name = db.Column(db.String(255))
     chinese_name = db.Column(db.String(100))
-    introduce_id = db.Column(db.String(40))
-    introduce_from = db.Column(db.String(100))
-    introduce_price = db.Column(db.Integer, doc="引进价格")
-    introduce_date = db.Column(db.DateTime, doc="引进时间")
     info_url = db.Column(db.String(255), doc="参考链接")
     comment = db.Column(db.String(255), doc="备注")
 
 
-        
+class Introduce(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    introduce_id = db.Column(db.String(40))
+    introduce_from = db.Column(db.String(100))
+    introduce_price = db.Column(db.String(20), doc="引进价格")
+    introduce_date = db.Column(db.String(20), doc="引进时间")
 
-
-
-
-
-
+    palnts_id = db.Column(db.Integer, db.ForeignKey('plants.local_id'))

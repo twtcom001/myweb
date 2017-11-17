@@ -5,6 +5,7 @@ from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 from app import create_app, db
 from app.models import User
+from flask.ext.uploads import UploadSet, configure_uploads
 
 # 设置环境 默认default 未开发环境
 # FLASK_CONFIG = ProdConfig
@@ -16,6 +17,11 @@ app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
+
+
+# flask.ext.uploads  模块设置
+upfile = UploadSet('FILE')      #名字最好取大写，因为config里面都是要求大写，这样容易匹配  
+configure_uploads(app, upfile)  #再把app和这个upfile这个上传组给绑定
 
 # shell模式增加字典
 def make_shell_context():

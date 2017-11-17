@@ -3,10 +3,38 @@
 
 import re
 from datetime import datetime
+import xlrd
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 from flask import render_template, redirect, flash, url_for, request, abort
 from flask import jsonify
-from models import User, Logs
+from models import User, Logs, Plants, Introduce
 from . import db, constants
+
+
+def batch_insert(filename):
+    workbook = xlrd.open_workbook(basedir+'\static\upload\\'+filename)
+    sheet = workbook.sheet_by_name(workbook.sheet_names()[0])
+    for i in range(1,sheet.nrows):
+        if i > 0:
+            if not Plants.query.filter_by(local_id = int(sheet.row_values(i)[0])).one_or_none() :
+                plants = Plants(local_id = int(sheet.row_values(i)[0]),
+                familia = sheet.row_values(i)[1],
+                genus = sheet.row_values(i)[2],
+                genus_id = sheet.row_values(i)[3],
+                icbn_name = sheet.row_values(i)[4],
+                chinese_name = sheet.row_values(i)[5],
+                info_url = sheet.row_values(i)[9],
+                comment = sheet.row_values(i)[11])
+                db.session.add(plants)
+                db.session.commit()
+            introduce = Introduce(introduce_id = sheet.row_values(i)[6],
+            introduce_from = sheet.row_values(i)[8],
+            introduce_price = sheet.row_values(i)[7],
+            introduce_date = sheet.row_values(i)[10],
+            palnts_id = int(sheet.row_values(i)[0]))
+            db.session.add(introduce)
+            db.session.commit()
 
 def insert_log(email,level,comment):
         logs = Logs(email=email, level=level, op_time=datetime.now(), comment=comment)

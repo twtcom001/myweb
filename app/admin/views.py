@@ -2,7 +2,7 @@
 import sys, os
 reload(sys)
 sys.setdefaultencoding('utf-8')
-from flask.ext.uploads import UploadSet, DOCUMENTS
+from datetime import datetime
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, current_user
 from flask import jsonify
@@ -10,9 +10,9 @@ from flask import jsonify
 from . import admin
 from .. import db, upfile
 from ..decorators import admin_required, permission_required
-from ..models import Permission, User, Logs
+from ..models import Permission, User, Logs, Plants
 from .forms import UsereditForm, UseraddForm, UploadForm
-from ..appclass import AppUser, insert_log
+from ..appclass import AppUser, insert_log, batch_insert
 
 
 @admin.route('/', methods=['GET', 'POST'])
@@ -116,23 +116,20 @@ def userdel(uid=None):
 
 
 @admin.route('/plants/', methods=['POST', 'GET'])
-def plants():
+@admin.route('/plants/page/<int:page>/', methods=['GET', 'POST'])
+def plants(page=1):
+    filename = ''
     form = UploadForm()
     if request.method == 'POST' and 'file' in request.files:
         filename = upfile.save(request.files['file'])
-        return redirect(url_for('admin.index'))
+        batch_insert(filename)
+    if page is None:
+        page = 1
+    page_data = Plants.query.filter(id>0).paginate(
+        page=page, per_page=50)    
 
-    return render_template('admin/plants.html', form=form)
-'''
-    if request.method == 'POST':
-        f = request.files['file']
-        basepath = os.path.dirname(__file__)  # 当前文件所在路径
-        upload_path = os.path.join(basepath, 'static',f.filename)  #注意：没有的文件夹一定要先创建，不然会提示没有该路径
-        f.save(upload_path)
-        return redirect(url_for('admin.plants'))
-    form = UploadForm()
-    return render_template('admin/plants.html', form=form)
-'''
+    return render_template('admin/plants.html', page_data=page_data, form=form)
+
 
 
 

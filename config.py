@@ -1,6 +1,7 @@
+#coding: utf-8
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
-
+from flask.ext.uploads import DEFAULTS
 
 class Config():
     # DEBUG = True
@@ -19,6 +20,13 @@ class Config():
     # you must do this for yourself to use the wtf, more about this, you can
     # take a reference to the book <<Flask Framework Cookbook>>.
     # But the book only have the version of English.
+
+    #flask.ext.uploads  模块设置
+    UPLOADED_FILE_DEST = 'app\static\upload'
+    UPLOADED_FILE_ALLOW = DEFAULTS
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024 
+    # read file
+    UPLOADED_DIR=os.path.join(basedir, UPLOADED_FILE_DEST)
 
     @staticmethod
     def init_app(app):
