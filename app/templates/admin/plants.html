@@ -64,17 +64,17 @@
 				<tr class="detail-row">
 					<td colspan="8">
 						<div class="table-detail">
-							<div class="row">
+							<div class="row" id ={{ plants_obj.local_id }}>
 
 								<div class="col-xs-12 col-sm-7">
 									<div class="space visible-xs"></div>
 
 									<div class="profile-user-info profile-user-info-striped">
 										<div class="profile-info-row">
-											<div class="profile-info-name"> 拉丁名 </div>
+											<div class="profile-info-name" id={{ plants_obj.local_id }}_1> 拉丁名 </div>
 
-											<div class="profile-info-value">
-												<span >{% if plants_obj.icbn_name == '' %} None {% else %}{{ plants_obj.icbn_name }} {% endif %}</span>
+											<div class="profile-info-value" >
+												<span>{% if plants_obj.icbn_name == '' %} None {% else %}{{ plants_obj.icbn_name }} {% endif %}</span>
 											</div>
 										</div>
 
@@ -195,7 +195,7 @@
 <!-- inline scripts related to this page -->
 
 <script type="text/javascript">
-	/*
+
 	function ShowElement(element) {
         var oldhtml = element.innerHTML;
         //创建新的input元素
@@ -223,7 +223,7 @@
         //设置父节点的双击事件为空
         newobj.parentNode.setAttribute("ondblclick", "");
     }
-    */
+
 	jQuery(function($) {
 		/***************/
 		$('.show-details-btn').on('click', function(e) {
@@ -232,26 +232,8 @@
 			$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
 		});
 		/***************/
-		$("div.profile-info-value>span").dblclick(function(){
-	        var inval = $(this).html();                            //获得td里的html内容
-	        var infd = $(this).attr("fd");                        //获得td的fd属性的值
-	        var inid = $(this).parent().attr("id");                //获得td的父节点id属性的值
-	        
-	    //把td里的html内容变为input框，并赋值
-	        $(this).html("<input type='text' id='edit"+infd+inid+"' value='"+inval+"'>");
-	        
-	    //input框获得焦点，以及失去焦点后的处理    
-	        $("#edit"+infd+inid).focus("blur",function() {
-	            var editval = $(this).val();                //获得input框中的值
 
-	            $(this).parent().html(editval);                //把得到的值赋给input框父节点的html
-	            
-	        //post表单提交
-	        //    $.post("jquery_dblclick.php",{id:inid,fd:infd,val:editval},function(data) {
-	         //       alert(data);
-	         //   })
-	        })
-	    })
+
 	})
 </script>
     
