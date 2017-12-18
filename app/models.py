@@ -121,6 +121,7 @@ class Plants(db.Model):
     comment = db.Column(db.String(255), doc="备注")
 
 
+
 class Introduce(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     introduce_id = db.Column(db.String(40))
@@ -128,4 +129,4 @@ class Introduce(db.Model):
     introduce_price = db.Column(db.String(20), doc="引进价格")
     introduce_date = db.Column(db.String(20), doc="引进时间")
 
-    palnts_id = db.Column(db.Integer, db.ForeignKey('plants.local_id'))
+    palnts_id = db.Column(db.String(64), db.ForeignKey('plants.local_id'))

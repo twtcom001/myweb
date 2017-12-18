@@ -8,8 +8,17 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     # SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_RECORD_QUERIES = True
+    """
+    sqllite
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+    PyMySQL   window 经常不好使
+    pip.exe install PyMySQL
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@1127.0.0.1:3306/support'
+
+    pip.exe install PyMySQL
+    """
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:123456@127.0.0.1:3306/support'
     ARTICLES_PER_PAGE = 10
     COMMENTS_PER_PAGE = 6
     SECRET_KEY = 'secret key to protect from csrf'

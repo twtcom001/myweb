@@ -10,10 +10,13 @@ from flask.ext.uploads import UploadSet, configure_uploads
 # 设置环境 默认default 未开发环境
 # FLASK_CONFIG = ProdConfig
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-# 增加db 初始化功能
-# python manage.py db init
-# python manage.py db migrate
-# python manage.py db upgrade
+
+"""
+增加db 初始化功能
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+"""
 manager = Manager(app)
 migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
